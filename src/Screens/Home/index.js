@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const splashlogo = require('../../assets/images/splashlogo.png');
 const Home = ({navigation}) => {

@@ -14,11 +14,7 @@ const SignupSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   email: Yup.string().required('Email belong to'),
   password: Yup.string()
-    .required('Please Enter your password')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-      'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
-    ),
+    .required('Please Enter your password'),
   confirmPassword: Yup.string()
     .required('Confirm Password is required')
     .oneOf([Yup.ref('password'), null], 'Passwords must match'),
@@ -37,7 +33,7 @@ const Singnup = ({navigation}) => {
   };
   const getYourLocation = async (lat, long) => {
     await fetchingLocation(lat, long).then(res => {
-      setLocation(res?.data?.items).catch(err => {
+      setLocation(res?.data?.items[0]?.address?.label).catch(err => {
         console.log(error);
       });
     });
@@ -49,12 +45,8 @@ const Singnup = ({navigation}) => {
         info?.coords?.latitude,
         info?.coords?.longitude,
       );
-      if (loc[0]?.address) {
-        setPincode(loc[0]?.address?.postalCode);
-      }
     });
   };
-  console.log(location[0]?.address?.label, 'here is your location');
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -152,8 +144,7 @@ const Singnup = ({navigation}) => {
                   Location
                 </Text>
                 <Input
-                  editable = {false}
-                  value={location[0]?.address?.label}
+                  value={location}
                   onFocus={() => getOneTimeLocation()}
                   size="lg"
                   placeholder="Tap for Location"
